@@ -1,0 +1,128 @@
+---
+title: "Data Manipulation in R - Some Examples"
+author: "Hannah Buckland"
+#date: "10/01/2022"
+output:
+  html_document: default
+  #pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+One of my favourite aspects of using R is how easy it is to manipulate data. Here I will go through a short basic example of you we can use R to read in and tidy up some probe data from two different analysis sessions that are saved as Excel worksheets. I will then show how easy it is to then combine this data with another file containing information gathered from the field.
+
+## Manipulating EPMA data
+### Reading in the data
+
+First we need to read in our data sets:
+```{r packages and data read, warning=FALSE, message=FALSE}
+library(readxl) # an R package that allows you to easily work with Excel workbooks
+library(tidyverse) # set of packages that I use for data manipulation and plotting
+library(stringr) # package for dealing with strings 
+library(data.table) # another powerful R package for data manipulation
+
+probe_files <- list.files(path = "../data", pattern = "probe", full.names = TRUE) # Look in the data folder and list the files with "probe" in the file name
+file_names <- str_extract(probe_files, pattern = "(?<=/data/).*(?=.xlsx)") # extracts the string after "/" and before ".xlsx" 
+
+# Read in each workbook as a list element
+probe_all <- lapply(probe_files, FUN = read_excel)
+names(probe_all) <- file_names # assigns names to each list element from file_names vector
+
+```
+### Combining two Excel spreadsheets containing geochemical data
+
+We now have read in both probe datasets. These files are in the Excel format that is directly output from the JEOL microprobe at the University of Bristol using the Probe for EPMA software. 
+
+*However*, even though collected using the same probe and software, there are some differences in the Excel files. I must have chosen to output the files slightly differently following each session, which is something that can easily happen.
+
+Lets have a look at the column headers of each file:
+
+```{r print headers of each file}
+
+# Extract the column names for each dataframe within the list
+names_1 <- names(probe_all$probe_data_day1) 
+names_2 <- names(probe_all$probe_data_day2)
+
+print(names_1)
+length(names_1) # this prints the number of columns in dataset 1
+print(names_2)
+length(names_2) # this prints the number of columns in dataset 1
+```
+
+We see by interrogating column names of these files that we have mismatches. If we simply processed this data in Excel (which was the approach I used in the past) this would be very irritating. For instance you would have to move around the order of your oxide columns. However, in R you can avoid this annoying step and automatically match up columns that have the same header:
+
+```{r comparing columns}
+# Find the columns the exist in both datasets
+diff_names <- intersect(names_1,names_2)
+print(diff_names)
+
+# Bind the two dataframes together into one large dataframe using data.table
+all_probe_data <- data.table::rbindlist(probe_all, fill = TRUE, idcol = TRUE) # by setting fill = TRUE this fills the columns that don't have data and using idcol = TRUE we add a variable for the analysis day called ".id"
+
+# Now we can reduce this dataset to only include the columns where we have data for both analysis sessions
+all_probe_filter <- subset(all_probe_data, select = diff_names) 
+
+# However we have now lost the ".id" column as this was not in the original data frames so let's add that back in
+
+all_probe_filter <- all_probe_filter %>%
+  mutate(id = all_probe_data$.id)
+
+```
+
+Now we have a long format data frame containing the data from both analysis days. You will see that we don't have any empty columns either and we didn't have to reorder the columns manually. Please note, in general the "intersect" and "rbindlist" functions are really powerful when comparing and manipulation lists and data frames in R.
+
+### Post-processing and tidying up EPMA data 
+
+You will see that the EPMA data contains a mixture of unknowns (samples with the prefix MZ for Mazama tephra) as well as secondary standard analyses (a mixture of Lipari and KN18 glasses). 
+
+We can look at the secondary standard data later, first let's focus on the Mazama unknowns:
+```{r filtering for unknowns}
+
+# Set up new data frame for rows where the sample name contains 'MZ'
+unknowns <- all_probe_filter %>%
+  filter(grepl('MZ', SAMPLE))
+
+```
+
+Now we have all the unknowns in one place, we might want to process the data. Firstly, we can normalise the oxides and find the volatiles by difference. Again, these steps can be done in Excel, but this method leaves you open to copying/dragging across the wrong formula especially when dealing with big datasets. Alternatively, in R, row-wise operations are easily carried out and easily repeated when processing new files and datasets.
+
+Let's normalise the oxide data:
+```{r finding the volatiles by difference}
+
+# First we need to isolate the oxide columns
+unk_cols <- data.frame(names=colnames(unknowns))
+
+# This will get the column names excluding the detection limit, error and date-time columns
+unk_cols_ox <- unk_cols %>% 
+  filter(!grepl('CDL|ERR|DATETIME',names)) %>%
+  unlist(use.names = FALSE) # this changes the output of the filter to a vector
+
+# Now we subset the unknowns dataframe to only include the oxide, total and sample columns and normalise the data to 100%
+unknowns_norm <- unknowns %>%
+  select(all_of(unk_cols_ox)) %>%
+  mutate(across(.cols = CaO:O,
+                .fns = ~ .x / TOTAL *100)) %>% # this across function only performs the function on the specified columns 
+  mutate(across(.cols = CaO:TOTAL,
+                .fns = ~ round(.x,3))) %>%
+  mutate(H2O_diff = 100 - TOTAL) # here we also add a column of volatiles by difference
+
+# Print the first 6 rows to check that has worked
+head(unknowns_norm)
+
+```
+
+We might at this stage also want to exclude some data with anomalous totals or use other limits on certain oxides to remove any "dud" analyses. I won't go into this in detail here because it can be sample specific, but this code block shows some ways you could approach the filtering stage:
+
+## Combining EPMA and field data
+
+### Reading in the csv file containing the information about our field sites
+
+## Take-home messages
+
+
+
+## Next steps
