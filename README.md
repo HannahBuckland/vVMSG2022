@@ -15,5 +15,8 @@ This repository contains snippets of code and some R Markdown tutorials that dem
 The code and examples I have shared will require some basic knowledge of R.
 However, if it would be useful in the future I could put together some more beginner levels tutorials if that would be helpful so please do contact me if that is something you are interested in.
 In the mean time, there is already a lot of help and guidance out there. 
-An excellent place to start is to follow these guidelines: [Getting-Started-with-R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R)
+An excellent place to start is to follow these guidelines: [Getting-Started-with-R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R).
+
+Ideally for using the resources I have shared you will have [R](https://www.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed on your computer.
+It would also help to have a [GitHub](https://docs.github.com/en/get-started) account which you then can integrate with [RStudio](https://happygitwithr.com/rstudio-git-github.html).
 
