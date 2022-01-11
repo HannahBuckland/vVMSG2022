@@ -39,7 +39,7 @@ spline_isos <- st_read("data/distal200.shp") # Buckland et al. 2020 spline isopa
 
 
 #### Plotting code #####
-ggplot(data=statesdata) +
+loc_map <- ggplot(data=statesdata) +
   geom_sf(fill = "#F4F9E9",
           colour = "#2F323A",
           size=0.2) +
@@ -64,3 +64,6 @@ ggplot(data=statesdata) +
   coord_sf(xlim=c(-125,-105),ylim=c(38,55)) +
   theme(panel.background = element_rect(fill="#B4D6D3"),
         legend.position = "right")
+
+
+ggsave("plots/MLSB_localities.png",loc_map,width=5,height=7,dpi=300)
