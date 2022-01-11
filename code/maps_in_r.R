@@ -65,5 +65,5 @@ loc_map <- ggplot(data=statesdata) +
   theme(panel.background = element_rect(fill="#B4D6D3"),
         legend.position = "right")
 
-
+# Use ggsave function to save the plot as a png
 ggsave("plots/MLSB_localities.png",loc_map,width=5,height=7,dpi=300)
