@@ -31,3 +31,4 @@ In this section you will find R Markdown documents each with a different theme. 
 
 ## [Code folder](https://github.com/HannahBuckland/vVMSG2022/tree/main/code)
 In this folder you can find miscellaneous scripts. Some contain functions that I have written that you can call into multiple documents. Others are standalone scripts that will read in the data and process it all in one.
+![](https://github.com/HannahBuckland/vVMSG2022/blob/main/images/script.png)
