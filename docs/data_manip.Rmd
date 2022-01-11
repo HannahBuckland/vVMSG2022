@@ -191,6 +191,7 @@ unknowns_mod <- merge(x=unknowns_mod,
 
 Following these steps we now have a data frame that contains all of the EPMA data as well as a the field information (sample description and lat-long of where the sample was collected) and information about whether the sample has also undergone grain size analysis.
 
+
 ### Why is this useful?
 
 Being able to easily match up different type of information (in this example EPMA data, lab analysis and field data) is very useful for physical volcanology studies where we are carrying out multiple analyses on the same sample. It is also very useful if you have multiple authors working on the same sample sets as the worksheets can easily be shared on GitHub so there is a centralised record of what has happened to the sample at every stage of analysis.
