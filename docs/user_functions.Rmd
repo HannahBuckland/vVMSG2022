@@ -1,0 +1,78 @@
+---
+title: "Writing User Functions in R"
+author: "Dr Hannah Buckland"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The benefit of writing code as part of your workflow as a volcanologist or tephrochronologist is you can very easily customise your data analysis techniques and by writing functions make it very easy to repeat the same analysis on new data as your gather it. 
+
+For instance one of the fundamentals of any programming language is to write a for loop. 
+
+What a for loop does is it performs the same calculation repeatedly. Here is a basic example. Say we have attended VMSG for the past 4 years, we can ask R to print this statement repeatedly in long hand or we can use a for loop:
+
+```{r for loop}
+
+# Long format
+print(paste("I attended VMSG in", 2018))
+print(paste("I attended VMSG in", 2019))
+print(paste("I attended VMSG in", 2020))
+print(paste("I attended VMSG in", 2021))
+
+# Writing a quick for loop
+for (i in 2018:2021){
+  print(paste("I attended VMSG in", i))
+}
+
+```
+Now this may not seem particularly useful in this case, but say you wanted to repeat a simple calculation for a measurement that have 10000 data points for. You would *not* want to write that out 10000 times. Yes, you could use Excel for that type of problem, however, once you start to get into more complex calculations, the equation function in Excel starts to be cumbersome. We have all experienced problems with brackets in the wrong place causing us problems in Excel.
+
+### So what is a function in R?
+
+Whilst for loops are really handy, you may start to want to perform more complex tasks repeatedly for different data. Now these are already written into R (often by much more experienced R users than myself). For example, "data.frame" is a function on its own. You can dive into the code behind any function in R by typing the function into the console.
+
+It is also very useful to be able to write your own user specific functions which is what I will talk about here. 
+
+Again let's start with a simple example. Say we have some measurements of tephra thickness in inches and we want to convert those to metres, we can define a function to do that:
+
+```{r conversion function}
+# Function for converting distances
+inches_to_metres <- function(thickness_in) {
+  thickness_df <- data.frame(thick_in=thickness_in,thick_m = thickness_in * 0.0254)
+  return(thickness_df) # this tells the function what to return as the output of the function
+}
+# We then can perform that function on a thickness in inches
+converted <- inches_to_metres(1)
+print(paste("1 inch is", converted$thick_m, "m"))
+```
+
+And then you could use this function to analyse much larger data volumes:
+```{r conversion large dataset}
+# Function for converting distances
+thickness_data <- round(runif(n=1000,min=3,max=400),digits=0) # creates uniform distribution of data from 3 to 400
+
+thickness_converted <- inches_to_metres(thickness_data)
+head(thickness_converted)
+```
+
+## More advanced user specific functions
+
+After you have got comfortable with writing basic functions, you can really ramp up what is included in your functions.
+
+For example, I have written a function that normalises cleans probe data by removing analyses where the analytical totals exceed 2 standard deviations from the mean. You can write these functions in a script and save them to be called and used in other documents (e.g., Markdown or other scripts). You can call an already saved function using:
+
+```{r calling a function, message=FALSE, warning=FALSE}
+
+# I want to use the "data_clear_function" I have saved separately
+library(here) # this package is useful for R finding the correct paths to files in your R project
+source(here::here("code","data_clean_function.R"))
+# And you see the code behind the function simple type
+data_clean
+
+```
+
