@@ -12,7 +12,7 @@
 
 This repository contains snippets of code and some R Markdown tutorials that demonstrate how you can use R and Github in volcanology and tephra studies.
 
-** DISCLAIMER ** This repository is very much a work in progress and is incomplete at the time of the vVMSG2022 conference (Jan 2022). Please save this [🔗link🔗](https://github.com/HannahBuckland/vVMSG2022) and keep checking back for new updates. And if you are a GitHub user you can set up notifications for repository updates.
+** DISCLAIMER ** This repository is very much a work in progress and is incomplete at the time of the vVMSG2022 conference (Jan 2022). Please save this [🔗link🔗](https://github.com/HannahBuckland/vVMSG2022) and keep checking back for new updates. If you are a GitHub user you can turn on notifications for repository updates.
 
 The code and examples I have shared will require some basic knowledge of R.
 However, if it would be useful in the future I could put together some more beginner levels tutorials, so if is something you would be interested in please do get in contact with me.
