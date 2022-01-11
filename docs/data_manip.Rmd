@@ -132,16 +132,137 @@ print(paste("This function has excluded",removed,"analyses"))
 
 ## Combining EPMA and field data
 
-The data frame "unknowns_clean" is now ready to be interrogated for source volcano correlations or other analysis methods. It is also in a format that it can be easily matched up with files that contain parallel information. For this example I will show how we can match up the EMPA data with a csv file containing information about the sampling locations.
+The data frame "unknowns_clean" is now ready to be interrogated for source volcano correlations or other analysis methods. It is also in a format that it can be easily matched up with files that contain parallel information. For this example I will show how we can match up the EMPA data with an Excel spreadsheet I use to keep track of sample prep and a csv file containing information about the sampling locations.
 
-### Reading in the csv file containing the information about our field sites
+### Reading in the files containing the information about our field sites
+```{r reading in field and sample data}
 
+# Read in the Excel spreadsheet
+sample_prep <- read_excel("../data/MZ_Sample_Prep.xlsx")
 
+# Read in the csv file containing the lat long of each locality in the Mazama Locality Database (Buckland et al. 2020)
+
+MLDB <- read.csv("../data/MLDB_latlong.csv",header=TRUE)
+MLDB <- MLDB %>%
+  mutate(MLDB_Number = as.character(MLDB$MLDB_Number)) # we change this column to a character to avoid R thinking it is an integer or factor
+```
+
+Now we can see there are some common columns across all of these data sets and I would encourage everyone to design a good sample numbering/naming system that can be used from the field data collection stage right through to EPMA and publication. For instance, every sample I analyse in the lab be it for grain size, componentry or geochemistry, it gets given a unique "Lab_ID":
+```{r print Lab_ID}
+head(sample_prep$Lab_ID)
+```
+And you can see I use these when naming the individual probe analyses with each getting an analytical ID, which gets termed "SAMPLE" by the Probe for EPMA software:
+
+```{r print analytical id}
+head(unknowns_clean$SAMPLE)
+```
+This means we can quite easily merge the two datasets.
+
+The same is then true when working between the "Sample_Prep" Excel workbook and the csv file containing the lat long information for each Mazama locality. Here it is the MLDB_numb columns that match up:
+
+```{r print MLDB info}
+head(sample_prep$Locality_MLDB)
+head(MLDB$MLDB_Number)
+```
+
+Now, with some slight manipulation, we can add the information contained in the sample prep and MLDB files to our geochemistry dataset:
+
+```{r merging datasets}
+
+# First we need to extract the Lab_ID from the SAMPLE column in the geochemistry data
+unknowns_mod <- unknowns_clean %>%
+  mutate(Lab_ID = sub("\\_.*", "", SAMPLE)) # This extracts the string before the "_"
+
+#Now we can add the locality number from the sample prep data frame
+sample_prep_sub <- sample_prep %>%
+  select(Locality_MLDB,Lab_ID,Fines_GSD,Notes) # this only selects a few columns we want to combine, but you can easily include additional columns
+
+unknowns_mod <- merge(unknowns_mod,
+                      sample_prep_sub,
+                      by="Lab_ID") # this tells R which columns to match up
+
+# Now we want to add in lat long data from the csv file
+unknowns_mod <- merge(x=unknowns_mod,
+                      y=MLDB,
+                      by.x="Locality_MLDB",
+                      by.y="MLDB_Number") # this is an example of how you can merge data frames even when the column headers are different using x and y
+
+```
+
+Following these steps we now have a data frame that contains all of the EPMA data as well as a the field information (sample description and lat-long of where the sample was collected) and information about whether the sample has also undergone grain size analysis.
 
 ### Why is this useful?
 
+Being able to easily match up different type of information (in this example EPMA data, lab analysis and field data) is very useful for physical volcanology studies where we are carrying out multiple analyses on the same sample. It is also very useful if you have multiple authors working on the same sample sets as the worksheets can easily be shared on GitHub so there is a centralised record of what has happened to the sample at every stage of analysis.
+
+It also allows for some nice data visualisations to be generated. For example, we might want to visualise the spatial distribution of our EPMA data:
+
+```{r spatial distribution of field data, fig.align='center', echo=FALSE, message=FALSE, warning=FALSE}
+
+# This code chunk contains some ways we can create maps in R please see the R Markdown document for making maps with R for more details
+library(sf) # package for spatial data
+library(rnaturalearth) # package that includes map data
+
+# Read in data for plotting map outlines of countries
+statesdata <- ne_states(country =c("United States of America","Canada"),
+                            returnclass = 'sf')
+
+volcano <- data.frame(name="Mazama",
+                        latitude = 42.9446,
+                        longitude = -122.1090) # data frame with location of mount Mazama
+
+volc_sf <- st_as_sf(volcano,
+                    coords = c("longitude","latitude"),crs = 4326, 
+                    agr = "constant") # convert to spatial dataset
+
+# Calculate number of analyses per site
+localities_geochem <- unknowns_mod %>%
+  count(Locality_MLDB)
+# Add back in the lat long information for each site
+localities_geochem <- merge(x=localities_geochem,
+                      y=MLDB,
+                      by.x="Locality_MLDB",
+                      by.y="MLDB_Number")
+
+# Now convert this to a spatial data set for plotting
+loc_sf <- st_as_sf(localities_geochem, 
+                   coords = c("Longitude", "Latitude"), crs = 4326, 
+                   agr = "constant") # convert to spatial dataset
+
+ggplot(data=statesdata) +
+   geom_sf(fill = "#F4F9E9",colour = "#2F323A",size=0.2) +
+  geom_sf(data=loc_sf,
+          aes(colour=Locality_MLDB,
+              size=n)) +
+  geom_sf_text(data = loc_sf,
+               aes(label=Locality_MLDB),
+               nudge_x = 0.25,
+               nudge_y = 0.25,
+               size=3) +
+  geom_sf(data=volc_sf,
+          pch=17,
+          size=4,
+          colour = "black") +
+  scale_size_binned(breaks= c(5,10,25,50,100)) +
+  labs(color="MLDB Number", size = "Number of Analyses") +
+  xlab(NULL) +
+  ylab(NULL) +
+  ggtitle("Visualising the spatial distribution of Mazama glass analyses") + 
+  coord_sf(xlim=c(-125,-115),ylim=c(40.5,50)) +
+  theme(panel.background = element_rect(fill="#B4D6D3"),
+        legend.position = "right")
+
+
+```
+
+From this plot for instance we can see that our analyses are very biased towards one locality (MLDB number 46).
+
 ## Take-home messages
 
+* R can replace or supplement Excel for manipulating data sets in volcanology and tephra studies (e.g., EPMA data, field and laboratory data)
+* The [tidyverse](https://www.tidyverse.org/) and [data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html) packages are powerful for data manipulation and processing
+* Designing comprehensive sample numbering systems will facilitate easy work flows across multiple methodologies
+ 
+<hr />
 
 
-## Next steps
