@@ -32,3 +32,12 @@ In this section you will find R Markdown documents each with a different theme. 
 ## [Code folder](https://github.com/HannahBuckland/vVMSG2022/tree/main/code)
 In this folder you can find miscellaneous scripts. Some contain functions that I have written that you can call into multiple documents. Others are standalone scripts that will read in the data and process it all in one.
 ![](https://github.com/HannahBuckland/vVMSG2022/blob/main/images/script.png)
+
+## [Data visualisations](https://github.com/HannahBuckland/vVMSG2022/blob/main/plots)
+In this repository I will include a number of scripts to produce data visualisations ranging from maps to fun visualisations of Netflix titles.
+![](/MLSB_localities.png)
+
+
+Again, just to stress this repository is a very much work a **in progress**. It would be great to gauge if there is much interest in me sharing these resources so I don't spend to much time preparing things that nobody is using. 
+
+Thanks everyone!
