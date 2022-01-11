@@ -13,10 +13,13 @@
 This repository contains snippets of code and some R Markdown tutorials that demonstrate how you can use R and Github in volcanology and tephra studies.
 
 The code and examples I have shared will require some basic knowledge of R.
-However, if it would be useful in the future I could put together some more beginner levels tutorials if that would be helpful so please do contact me if that is something you are interested in.
+However, if it would be useful in the future I could put together some more beginner levels tutorials, so if is something you would be interested in please do get in contact with me.
 In the mean time, there is already a lot of help and guidance out there. 
 An excellent place to start is to follow these guidelines: [Getting-Started-with-R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R).
 
-Ideally for using the resources I have shared you will have [R](https://www.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed on your computer.
-It would also help to have a [GitHub](https://docs.github.com/en/get-started) account which you then can integrate with [RStudio](https://happygitwithr.com/rstudio-git-github.html).
+Ideally, to use the resources I am sharing here you will have [R](https://www.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) installed on your computer.
+It would also help to have a [GitHub](https://docs.github.com/en/get-started) account which you then can integrate with [RStudio](https://happygitwithr.com/rstudio-git-github.html). Linking up GitHub and RStudio makes life so much easier but can be a bit of a faff especially with university managed computers (various SSH keys etc.) but again because of the broad usership, there is so much help [available online](https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r/) for getting this setup on your workstation. If in doubt Google your question/problem/error someone will have had the same issue :)
+
+
+
 
