@@ -10,10 +10,10 @@
 
 </div>
 
-Repository with example code and some tutorials for getting started with R and Github for volcanologists
+This repository contains snippets of code and some R Markdown tutorials that demonstrate how you can use R and Github in volcanology and tephra studies.
 
-The code and examples I have shared do require that you have some basic knowledge of R.
+The code and examples I have shared will require some basic knowledge of R.
+However, if it would be useful in the future I could put together some more beginner levels tutorials if that would be helpful so please do contact me if that is something you are interested in.
+In the mean time, there is already a lot of help and guidance out there. 
+An excellent place to start is to follow these guidelines: [Getting-Started-with-R](https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R)
 
-If it would be useful I could put together some more beginner levels advice, but there is already a lot out there. 
-An excellent place to start is to follow these guidelines:
-https://support.rstudio.com/hc/en-us/articles/201141096-Getting-Started-with-R
