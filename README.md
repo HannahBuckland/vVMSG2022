@@ -38,7 +38,7 @@ In this folder you can find miscellaneous scripts. Some contain functions that I
 ## [Data visualisations](https://github.com/HannahBuckland/vVMSG2022/blob/main/plots)
 In this repository I will include a number of scripts to produce data visualisations ranging from maps to fun visualisations of Netflix titles.
 <div align="center">
-<img src="https://github.com/HannahBuckland/vVMSG2022/blob/main/plots/MLSB_localities.png" width="250" height="350" />
+<img src="https://github.com/HannahBuckland/vVMSG2022/blob/main/plots/MLSB_localities.png" width="300" height="420" />
 </div>
 <br>
 Again, just to stress this repository is a very much work a **in progress**. It would be great to gauge if there is much interest in me sharing these resources so I don't spend to much time preparing things that nobody is using. 
