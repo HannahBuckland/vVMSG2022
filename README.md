@@ -24,6 +24,7 @@ It would also help to have a [GitHub](https://docs.github.com/en/get-started) ac
 # Repository Contents
 
 ## [R Markdown Tutorials](https://github.com/HannahBuckland/vVMSG2022/tree/main/docs)
+In this section you will find R Markdown documents each with a different theme. [R Markdown](https://rmarkdown.rstudio.com/lesson-1.html) is way to write dynamic documents in which you can embed code chunks and dynamically read in new data. They can be used similarly to a [Jupyter Notebook](https://realpython.com/jupyter-notebook-introduction/) where the user can go through the document and edit the code chunks as they wish.
 ![](https://github.com/HannahBuckland/vVMSG2022/blob/main/images/markdown.png)
 
 
