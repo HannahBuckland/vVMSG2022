@@ -21,5 +21,9 @@ Ideally, to use the resources I am sharing here you will have [R](https://www.r-
 It would also help to have a [GitHub](https://docs.github.com/en/get-started) account which you then can integrate with [RStudio](https://happygitwithr.com/rstudio-git-github.html). Linking up GitHub and RStudio makes life so much easier but can be a bit of a faff especially with university managed computers (various SSH keys etc.) but again because of the broad usership, there is so much help [available online](https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r/) for getting this setup on your workstation. If in doubt Google your question/problem/error someone will have had the same issue :)
 
 
+# Repository Contents
+
+## [R Markdown Tutorials](https://github.com/HannahBuckland/vVMSG2022/tree/main/docs)
+![](https://github.com/HannahBuckland/vVMSG2022/blob/main/images/markdown.png)
 
 
