@@ -1,10 +1,9 @@
 ---
-title: "Data Manipulation in R - Some Examples"
-author: "Hannah Buckland"
+title: "Data Manipulation in R"
+author: "Dr Hannah Buckland"
 #date: "10/01/2022"
 output:
   html_document: default
-  #pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -24,6 +23,7 @@ library(readxl) # an R package that allows you to easily work with Excel workboo
 library(tidyverse) # set of packages that I use for data manipulation and plotting
 library(stringr) # package for dealing with strings 
 library(data.table) # another powerful R package for data manipulation
+library(here)
 
 probe_files <- list.files(path = "../data", pattern = "probe", full.names = TRUE) # Look in the data folder and list the files with "probe" in the file name
 file_names <- str_extract(probe_files, pattern = "(?<=/data/).*(?=.xlsx)") # extracts the string after "/" and before ".xlsx" 
@@ -115,11 +115,30 @@ head(unknowns_norm)
 
 ```
 
-We might at this stage also want to exclude some data with anomalous totals or use other limits on certain oxides to remove any "dud" analyses. I won't go into this in detail here because it can be sample specific, but this code block shows some ways you could approach the filtering stage:
+We might at this stage also want to exclude some data with anomalous totals or use other limits on certain oxides to remove any "dud" analyses. I won't go into this in detail here because it can be sample specific, but this code block shows some ways you could approach the filtering stage. Also please see the writing functions markdown document for how to write and call functions:
+```{r data clean function}
+
+# I want to use the "data_clear_function" I have saved separately
+source(here::here("code","data_clean_function.R"))
+
+# This runs that function on our normalised data
+unknowns_clean <- data_clean(unknowns_norm)
+
+removed <- nrow(unknowns_norm)-nrow(unknowns_clean) # compare the number of rows
+
+print(paste("This function has excluded",removed,"analyses"))
+
+```
 
 ## Combining EPMA and field data
 
+The data frame "unknowns_clean" is now ready to be interrogated for source volcano correlations or other analysis methods. It is also in a format that it can be easily matched up with files that contain parallel information. For this example I will show how we can match up the EMPA data with a csv file containing information about the sampling locations.
+
 ### Reading in the csv file containing the information about our field sites
+
+
+
+### Why is this useful?
 
 ## Take-home messages
 
