@@ -80,7 +80,7 @@ data_clean
 
 [Biass and Bonadonna](https://github.com/e5k/TOTGS/tree/v2.1) wrote some fantastic MATLAB code for calculating the Total Grain Size Distribution (TGSD) for tephra deposits. I have simply coding up the same calculation in R for those who don't have access to a MATLAB license, or prefer to use R for their data processing.
 
-To use the function ("Voronoi_TGSD_function.R"), you can simply open up the script and use the example dataset from the May 1980 eruption of Mount St Helens (grain size data sourced from Sarna-Wojcicki et al. 1981; Carey and Sigurdsson, 1982; Durant et al. 2009; Eychenne et al. 2012 and Meredith, 2019).
+The functions are all contained in one script ("Voronoi_TGSD_functions.R"), which you can simply open up and execute the full script to calculate the TGSD. I have included an example dataset from the May 1980 eruption of Mount St Helens for testing purposes (grain size data sourced from Sarna-Wojcicki et al. 1981; Carey and Sigurdsson, 1982; Durant et al. 2009; Eychenne et al. 2012 and Meredith, 2019).
 
 
 
