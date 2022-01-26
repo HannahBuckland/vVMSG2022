@@ -27,7 +27,10 @@ TGSD_input <- list(datapoints=here("data","MSH_TGSD_dataset.csv"),
 # Here please input Y or N depending on whether you want the outputs to save (be careful of overwriting)
 save_condition <- "Y"
 
+################### ################### ################### ################### 
 ################### Shouldn't need to change below this line ##################
+################### ################### ################### ################### 
+
 
 #### Function to read in the GSDs and zero points ####
 readdat <- function(TGSD_input){
