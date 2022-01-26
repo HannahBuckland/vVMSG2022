@@ -16,21 +16,8 @@ library(here)
 library(data.table)
 library(rworldmap)
 
-#### Enter file names for the csv file with GSD at each locality (datapoints),
-#### the csv file containing the lat long of the zero line (zeros) and
-#### the lat long of your volcano (volc_ll) ####
-TGSD_input <- list(
-  datapoints = here("data", "MSH_TGSD_dataset.csv"),
-  zeros = here("data", "MSH_TGSD_zeroline.csv"),
-  volc_ll = data.frame(vol_lat = 46.2, vol_long = -122.18),
-  utm_zone = ""
-)
-
-# Here please input Y or N depending on whether you want the outputs to save (be careful of overwriting)
-save_condition <- "Y"
-
 ################### ################### ################### ###################
-################### Shouldn't need to change below this line ##################
+################ Only confident users should change below this line ###########
 ################### ################### ################### ###################
 
 
@@ -47,16 +34,13 @@ readdat <- function(TGSD_input) {
   return(dataread)
 }
 
-voronoi_input <-
-  readdat(TGSD_input) # apply the readdat function to the input
-
 #### Function to set the UTM zone for the spatial calculations ####
-utmzone <- function(GSDpoints) {
+utmzone <- function(latlongpoints) {
   # Each UTM zone is 6 degrees wide, so you can get the zone number by looking at the longitude
   utmzone <-
-    median(floor((GSDpoints$long + 180) / 6) + 1) # here we use the median as data can span multiple zones
+    median(floor((latlongpoints$long + 180) / 6) + 1) # here we use the median as data can span multiple zones
   # now test whether the zone is positive or negative (north or south)
-  if (min(GSDpoints$lat) > 0) {
+  if (min(latlongpoints$lat) > 0) {
     proj_utm <- utmzone + 32600
   } else {
     proj_utm <- utmzone + 32700
@@ -65,18 +49,16 @@ utmzone <- function(GSDpoints) {
   return(proj_CRS)
 }
 
-utm_convert <-
-  utmzone(voronoi_input$llpoints) # Apply utm function to GSD points file
 
 #### Voronoi TGSD calculation function ####
 
-TGSD_voronoi <- function(input) {
-  llpoints <- input$llpoints # isolate the GSD data
+TGSD_voronoi <- function(voronoi_input) {
+  llpoints <- voronoi_input$llpoints # isolate the GSD data
   
   llpoints <- llpoints %>%
     select(lat, long, gm2, starts_with("phi")) # selects only the columns we need for analysis
   
-  llzeros <- input$llzeros
+  llzeros <- voronoi_input$llzeros
   
   fullpoints <-
     bind_rows(llpoints, llzeros) # combine the data and zeros for Voronoi tesslation
@@ -188,9 +170,6 @@ TGSD_voronoi <- function(input) {
   
 }
 
-out_voronoi <-
-  TGSD_voronoi(voronoi_input) # apply the Voronoi function to the input
-
 #### Function to convert Voronoi output into spatial data, useful for plotting ####
 
 spatial_proc <- function(out_voronoi) {
@@ -209,17 +188,13 @@ spatial_proc <- function(out_voronoi) {
   return(out)
 }
 
-sf_out <-
-  spatial_proc(out_voronoi) # apply spatial function to Voronoi output
-
-
 #### Plotting functions to produce histogram of TGSD and map of Voronoi cells ####
 
 # Function to find out what countries are required for the basemap
-coords2country <- function(zeropoints) {
+coords2country <- function(latlongpoints) {
   countriesSP <-
     rworldmap::getMap(resolution = 'low') # get data from world map
-  llonly <- zeropoints %>%
+  llonly <- latlongpoints %>%
     select(long, lat) # order the longitude and latitude of the zeros
   
   #setting CRS directly to that from rworldmap
@@ -237,10 +212,8 @@ coords2country <- function(zeropoints) {
   return(country_list)
 }
 
-countries_out <- coords2country(voronoi_input$llzeros)
-
 # Plotting function
-TGSD_plots <- function(input) {
+TGSD_plots <- function(TGSD_input) {
   statesdata <- rnaturalearth::ne_states(country = countries_out,
                                          returnclass = 'sf')
   
@@ -356,21 +329,4 @@ TGSD_plots <- function(input) {
   out_plots <- TGSDplt + vormap
   return(out_plots)
   
-}
-
-results_plotted <- TGSD_plots()
-
-out_voronoi$PDF
-results_plotted
-
-
-#### Conditional saving ####
-
-if (save_condition == "Y") {
-  write.csv(out_voronoi$PDF, file(here("data", "TGSD_out.csv")), row.names = FALSE)
-  ggsave(file = (here("plots", "TGSD_plots.pdf")), results_plotted)
-  
-  print("Outputs have been saved in `plots` and `data`")
-} else{
-  print("Outputs not saved")
 }
