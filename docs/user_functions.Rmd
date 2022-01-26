@@ -80,10 +80,32 @@ data_clean
 
 [Biass and Bonadonna](https://github.com/e5k/TOTGS/tree/v2.1) wrote some fantastic MATLAB code for calculating the Total Grain Size Distribution (TGSD) for tephra deposits. I have simply coding up the same calculation in R for those who don't have access to a MATLAB license, or prefer to use R for their data processing.
 
-The functions are all contained in one script ("Voronoi_TGSD_functions.R"), which you can simply open up and execute the full script to calculate the TGSD. I have included an example dataset from the May 1980 eruption of Mount St Helens for testing purposes (grain size data sourced from Sarna-Wojcicki et al. 1981; Carey and Sigurdsson, 1982; Durant et al. 2009; Eychenne et al. 2012 and Meredith, 2019).
+The TGSD calculation can be executed using the script ("TGSD_calculate.R"), which you can simply open up and run to calculate the TGSD by simply adding the file names and volcano location at the top of the script. I have included an example dataset from the May 1980 eruption of Mount St Helens for testing purposes (grain size data sourced from Sarna-Wojcicki et al. 1981; Carey and Sigurdsson, 1982; Durant et al. 2009; Eychenne et al. 2012 and Meredith, 2019).
 
+The TGSD calculation itself is performed using a series of separate functions saved separately in the "Voronoi_TGSD_functions.R" file which we can have a look at in more detail. Some of the functions are very specific to the Voronoi TGSD method, however, some are more general. For instance the "coords2country" function can be helpful for finding out what country a pair of latitude, longitude coordinates are in. For example:
+```{r coords country, warning=FALSE,message=FALSE}
+source(here("code","Voronoi_TGSD_functions.R"))
 
+# Lets input the coordinates of the City of Edinburgh in Scotland
+unknown_point <- data.frame(lat=55.95,long=-3.19)
+# Then we apply the coords2 country function
+which_country <- coords2country(unknown_point)
 
+# And we can print the results
+print(paste("Latitude =",unknown_point$lat,"Longitude =",unknown_point$long,"is located in", which_country))
 
+```
 
+Similarly, we have a function that will tell us what UTM zone a pair of latitude, longitude coordinates and provide us with the proj4string necessary to reproject data into the UTM coordinate system which is necessary when calculating areas:
+
+```{r UTM zone, warning=FALSE,message=FALSE}
+source(here("code","Voronoi_TGSD_functions.R"))
+
+# Then we apply the coords2 country function
+which_utm <- utmzone(unknown_point)
+
+# And we can print the results
+print(paste("The proj4string code for the UTM zone where the city of Edinburgh is located is", which_utm))
+
+```
 
