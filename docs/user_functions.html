@@ -214,12 +214,12 @@ thickness_data &lt;- round(runif(n=1000,min=3,max=400),digits=0) # creates unifo
 thickness_converted &lt;- inches_to_metres(thickness_data)
 head(thickness_converted)</code></pre>
 <pre><code>##   thick_in thick_m
-## 1      264  6.7056
-## 2      221  5.6134
-## 3       47  1.1938
-## 4      245  6.2230
-## 5      106  2.6924
-## 6       56  1.4224</code></pre>
+## 1       13  0.3302
+## 2      129  3.2766
+## 3      399 10.1346
+## 4       41  1.0414
+## 5      122  3.0988
+## 6      108  2.7432</code></pre>
 </div>
 </div>
 <div id="more-advanced-user-specific-functions" class="section level2">
@@ -243,16 +243,28 @@ data_clean</code></pre>
 </div>
 <div id="functions-to-calculate-the-total-grain-size-distribution-of-a-deposit" class="section level2">
 <h2>Functions to calculate the Total Grain Size Distribution of a deposit</h2>
-<p><a href="https://github.com/e5k/TOTGS/tree/v2.1">Biass and Bonadonna</a> wrote some fantastic MATLAB code for calculating the Total Grain Size Distribution (TGSD) for tephra deposits. I have simply coding up the same calculation in R for those who don’t have access to a MATLAB license, or prefer to use R for their data processing.</p>
-<p>The TGSD calculation can be executed using the script (“TGSD_calculate.R”), which you can simply open up and run to calculate the TGSD by simply inputing the file names and volcano location. I have included an example dataset from the May 1980 eruption of Mount St Helens for testing purposes (grain size data sourced from Sarna-Wojcicki et al. 1981; Carey and Sigurdsson, 1982; Durant et al. 2009; Eychenne et al. 2012 and Meredith, 2019).</p>
+<p><a href="https://github.com/e5k/TOTGS/tree/v2.1">Biass and Bonadonna (2014)</a> wrote some fantastic MATLAB code for calculating the Total Grain Size Distribution (TGSD) for tephra deposits. I have simply coding up the same calculation in R for those who don’t have access to a MATLAB license, or prefer to use R for their data processing.</p>
+<p>The TGSD calculation can be executed using the script (“TGSD_calculate.R”), which you can simply open up and run to calculate the TGSD by simply adding the file names and volcano location at the top of the script. I have included an example dataset from the May 1980 eruption of Mount St Helens for testing purposes (grain size data sourced from <a href="https://scholarworks.boisestate.edu/geo_facpubs/161/">Sarna-Wojcicki et al. 1981</a>; <a href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/JB087iB08p07061">Carey and Sigurdsson, 1982</a>; <a href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2008JB005756">Durant et al. 2009</a>; <a href="https://doi.org/10.1007/s00445-011-0517-5">Eychenne et al. 2012</a> and Meredith, 2019).</p>
 <p>The TGSD calculation itself is performed using a series of separate functions saved separately in the “Voronoi_TGSD_functions.R” file which we can have a look at in more detail. Some of the functions are very specific to the Voronoi TGSD method, however, some are more general. For instance the “coords2country” function can be helpful for finding out what country a pair of latitude, longitude coordinates are in. For example:</p>
 <pre class="r"><code>source(here(&quot;code&quot;,&quot;Voronoi_TGSD_functions.R&quot;))
 
+# Lets input the coordinates of the City of Edinburgh in Scotland
 unknown_point &lt;- data.frame(lat=55.95,long=-3.19)
+# Then we apply the coords2 country function
 which_country &lt;- coords2country(unknown_point)
 
+# And we can print the results
 print(paste(&quot;Latitude =&quot;,unknown_point$lat,&quot;Longitude =&quot;,unknown_point$long,&quot;is located in&quot;, which_country))</code></pre>
 <pre><code>## [1] &quot;Latitude = 55.95 Longitude = -3.19 is located in United Kingdom&quot;</code></pre>
+<p>Similarly, we have a function that will tell us what UTM zone a pair of latitude, longitude coordinates and provide us with the proj4string necessary to reproject data into the UTM coordinate system which is necessary when calculating areas:</p>
+<pre class="r"><code>source(here(&quot;code&quot;,&quot;Voronoi_TGSD_functions.R&quot;))
+
+# Then we apply the coords2 country function
+which_utm &lt;- utmzone(unknown_point)
+
+# And we can print the results
+print(paste(&quot;The proj4string code for the UTM zone where the city of Edinburgh is located is&quot;, which_utm))</code></pre>
+<pre><code>## [1] &quot;The proj4string code for the UTM zone where the city of Edinburgh is located is +proj=utm +zone=30 +datum=WGS84 +units=m +no_defs&quot;</code></pre>
 </div>
 
 
