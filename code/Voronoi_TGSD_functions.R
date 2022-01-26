@@ -119,7 +119,7 @@ TGSD_voronoi <- function(voronoi_input) {
   medphi <-
     approx(
       resPDF$CDF,
-      resPDF$phi_bins,
+      resPDF$phi,
       xout = 50,
       method = "linear",
       ties = mean
@@ -127,7 +127,7 @@ TGSD_voronoi <- function(voronoi_input) {
   phi84 <-
     approx(
       resPDF$CDF,
-      resPDF$phi_bins,
+      resPDF$phi,
       xout = 84,
       method = "linear",
       ties = mean
@@ -135,7 +135,7 @@ TGSD_voronoi <- function(voronoi_input) {
   phi16 <-
     approx(
       resPDF$CDF,
-      resPDF$phi_bins,
+      resPDF$phi,
       xout = 16,
       method = "linear",
       ties = mean
@@ -143,7 +143,7 @@ TGSD_voronoi <- function(voronoi_input) {
   phi95 <-
     approx(
       resPDF$CDF,
-      resPDF$phi_bins,
+      resPDF$phi,
       xout = 95,
       method = "linear",
       ties = mean
@@ -151,7 +151,7 @@ TGSD_voronoi <- function(voronoi_input) {
   phi5 <-
     approx(
       resPDF$CDF,
-      resPDF$phi_bins,
+      resPDF$phi,
       xout = 5,
       method = "linear",
       ties = mean
