@@ -262,7 +262,7 @@ out_voronoi$PDF
 results_plotted
 
 
-#### User interaction for saving ####
+#### Conditional saving ####
 
 if(save_condition == "Y") {
   write.csv(out_voronoi$PDF,file(here("data","TGSD_out.csv")),row.names = FALSE)
