@@ -23,7 +23,7 @@ library(rworldmap)
 TGSD_input <- list(
   datapoints = here("data", "MSH_TGSD_dataset.csv"),
   zeros = here("data", "MSH_TGSD_zeroline.csv"),
-  volc_ll = data.frame(vol_lat = 46.2, vol_long = -122.18),
+  volc_ll = data.frame(vol_lat = 46.2, vol_long = -122.18)
 )
 
 # Here please input Y or N depending on whether you want the outputs to save (be careful of overwriting)
