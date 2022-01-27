@@ -35,6 +35,7 @@ readdat <- function(TGSD_input) {
 }
 
 #### Function to set the UTM zone for the spatial calculations ####
+# Help from this StackExchange https://gis.stackexchange.com/questions/209267/r-return-the-utm-zone-that-a-wgs84-point-belongs-to
 utmzone <- function(latlongpoints) {
   # Each UTM zone is 6 degrees wide, so you can get the zone number by looking at the longitude
   utmzone <-
@@ -52,13 +53,13 @@ utmzone <- function(latlongpoints) {
 
 #### Voronoi TGSD calculation function ####
 
-TGSD_voronoi <- function(voronoi_input) {
-  llpoints <- voronoi_input$llpoints # isolate the GSD data
+TGSD_voronoi <- function(GSDdata) {
+  llpoints <- GSDdata$llpoints # isolate the GSD data
   
   llpoints <- llpoints %>%
     select(lat, long, gm2, starts_with("phi")) # selects only the columns we need for analysis
   
-  llzeros <- voronoi_input$llzeros
+  llzeros <- GSDdata$llzeros
   
   fullpoints <-
     bind_rows(llpoints, llzeros) # combine the data and zeros for Voronoi tesslation
@@ -172,16 +173,16 @@ TGSD_voronoi <- function(voronoi_input) {
 
 #### Function to convert Voronoi output into spatial data, useful for plotting ####
 
-spatial_proc <- function(out_voronoi) {
-  map <- sf::st_as_sf(out_voronoi$SPDF) # convert to sf object
+spatial_proc <- function(Voronoi_output) {
+  map <- sf::st_as_sf(Voronoi_output$SPDF) # convert to sf object
   map_utm <- sf::st_set_crs(map, CRS(utm_convert))
   points <- sf::st_as_sf(
-    out_voronoi$input,
+    Voronoi_output$input,
     coords = c("long", "lat"),
     crs = 4326,
     agr = "constant"
   )
-  dfv <- out_voronoi$PDF
+  dfv <- Voronoi_output$PDF
   
   out <- list(map_utm, points, dfv)
   names(out) <- c("map_sf", "points_sf", "TGSD")
@@ -191,6 +192,7 @@ spatial_proc <- function(out_voronoi) {
 #### Plotting functions to produce histogram of TGSD and map of Voronoi cells ####
 
 # Function to find out what countries are required for the basemap
+# Taken from StackOverflow: https://stackoverflow.com/questions/14334970/convert-latitude-and-longitude-coordinates-to-country-name-in-r/14342127#14342127
 coords2country <- function(latlongpoints) {
   countriesSP <-
     rworldmap::getMap(resolution = 'low') # get data from world map
